@@ -16,14 +16,36 @@ export function clampPoint(point: Point, bounds: Bounds): Point {
   };
 }
 
-export function createBounds(viewport: Size, characterHeight: number): Bounds {
-  const horizontalMargin = 0.35 * characterHeight;
-  const verticalMargin = 0.50 * characterHeight;
+export function createBounds(
+  viewport: Size,
+  characterHeight: number,
+  config?: CharacterConfig,
+): Bounds {
+  if (config === undefined) {
+    const horizontalMargin = 0.35 * characterHeight;
+    const verticalMargin = 0.50 * characterHeight;
+    return {
+      left: horizontalMargin,
+      top: verticalMargin,
+      right: viewport.width - horizontalMargin,
+      bottom: viewport.height - verticalMargin,
+    };
+  }
+
+  const scale = config.heldScale;
+  const halfWidth = config.visibleCharacterWidthInHeights * characterHeight / 2;
+  const sin = Math.sin(config.maximumRotationRadians);
+  const cos = Math.cos(config.maximumRotationRadians);
+  const horizontalMargin = scale * (halfWidth * cos + characterHeight * sin);
+  const topMargin = scale * (characterHeight * cos + halfWidth * sin) +
+    config.heldVerticalOffsetInHeights * characterHeight;
+  const bottomMargin = scale * halfWidth * sin +
+    Math.max(config.heldVerticalOffsetInHeights, config.landingVerticalOffsetInHeights) * characterHeight;
   return {
     left: horizontalMargin,
-    top: verticalMargin,
+    top: topMargin,
     right: viewport.width - horizontalMargin,
-    bottom: viewport.height - verticalMargin,
+    bottom: viewport.height - bottomMargin,
   };
 }
 

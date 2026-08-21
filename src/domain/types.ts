@@ -1,5 +1,6 @@
 export type CharacterState = 'IDLE' | 'REACTING' | 'HELD' | 'LANDING';
 export type LandingKind = 'SAFE' | 'WOBBLE' | 'ROLL';
+export type LandingStage = 'NONE' | 'MOTION' | 'GLARE';
 
 export type Point = Readonly<{ x: number; y: number }>;
 export type Size = Readonly<{ width: number; height: number }>;
@@ -23,6 +24,11 @@ export type CharacterSnapshot = Readonly<{
   rotationRadians: number;
   verticalOffset: number;
   landingKind: LandingKind | null;
+  landingStage: LandingStage;
+  landingScaleX: number;
+  landingScaleY: number;
   reactionProgress: number;
   heldPhase: number;
+  heldFlailAmplitude: number;
+  heldTransitionToken: number;
 }>;

@@ -3,7 +3,7 @@ import type { CharacterState, LandingKind } from './types';
 const LANDING_DURATIONS_SECONDS: Readonly<Record<LandingKind, number>> = {
   SAFE: 0.18,
   WOBBLE: 0.45,
-  ROLL: 0.95,
+  ROLL: 0.45,
 };
 
 export class CharacterStateMachine {

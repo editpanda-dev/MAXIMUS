@@ -23,7 +23,8 @@ function dispatchFeedback(
   current: CharacterSnapshot,
   feedback: FeedbackController,
 ): void {
-  if (current.state === 'HELD' && previous.state !== 'HELD') {
+  if ((current.state === 'HELD' && previous.state !== 'HELD') ||
+      current.heldTransitionToken !== previous.heldTransitionToken) {
     feedback.playHeld();
     feedback.vibrate(8);
   }

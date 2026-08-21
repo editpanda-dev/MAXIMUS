@@ -50,9 +50,16 @@ describe('motion helpers', () => {
     ])).toEqual({ x: 0, y: 0 });
   });
 
-  it('creates HOME bounds from character-height margins', () => {
-    expect(createBounds({ width: 1_000, height: 800 }, 200))
-      .toEqual({ left: 70, top: 100, right: 930, bottom: 700 });
+  it('creates foot-anchored bounds from visible extents at the maximum held scale', () => {
+    const bounds = (createBounds as (...args: unknown[]) => ReturnType<typeof createBounds>)(
+      { width: 1_000, height: 800 },
+      200,
+      defaultCharacterConfig,
+    );
+    expect(bounds.left).toBeCloseTo(94.5, 0);
+    expect(bounds.top).toBeCloseTo(225, 0);
+    expect(bounds.right).toBeCloseTo(905.5, 0);
+    expect(bounds.bottom).toBeCloseTo(787, 0);
   });
 
   it('moves toward a target by a time-scaled follow amount', () => {

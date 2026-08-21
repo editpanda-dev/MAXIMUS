@@ -11,6 +11,11 @@ export type CharacterConfig = Readonly<{
   reactionDurationSeconds: number;
   glareDurationSeconds: number;
   characterHeightRatio: number;
+  visibleCharacterWidthInHeights: number;
+  maximumRotationRadians: number;
+  heldVerticalOffsetInHeights: number;
+  landingVerticalOffsetInHeights: number;
+  idleWalkSpeedInHeightsPerSecond: number;
 }>;
 
 export const defaultCharacterConfig: CharacterConfig = {
@@ -26,4 +31,9 @@ export const defaultCharacterConfig: CharacterConfig = {
   reactionDurationSeconds: 0.6,
   glareDurationSeconds: 0.5,
   characterHeightRatio: 0.28,
+  visibleCharacterWidthInHeights: 251 / 515,
+  maximumRotationRadians: 0.20,
+  heldVerticalOffsetInHeights: 7 / 515,
+  landingVerticalOffsetInHeights: 4 / 515,
+  idleWalkSpeedInHeightsPerSecond: 0.075,
 };

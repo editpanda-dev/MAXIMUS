@@ -40,7 +40,10 @@ export class PixiCharacterView {
 
     this.container.position.set(snapshot.position.x, snapshot.position.y);
     this.sprite.position.set(0, verticalOffset);
-    this.sprite.scale.set(snapshot.facing * this.baseScale * scale, this.baseScale * scale);
+    this.sprite.scale.set(
+      snapshot.facing * this.baseScale * scale * snapshot.landingScaleX,
+      this.baseScale * scale * snapshot.landingScaleY,
+    );
     this.sprite.rotation = snapshot.rotationRadians * motion;
 
     const lift = Math.max(0, -verticalOffset) / Math.max(1, this.characterHeight);
