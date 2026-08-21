@@ -1,1 +1,55 @@
 # 장한별 키우기 웹 프로토타입
+
+따뜻한 HOME 안에서 장한별 한 명과 상호작용하는 브라우저 프로토타입입니다. 제품 화면에는 조작 안내를 표시하지 않으며, 아래 안내는 테스트 진행자만을 위한 문서입니다.
+
+## Requirements
+
+- Node.js 24.17.0 또는 호환 버전
+- npm 11.13.0 또는 호환 버전
+- 데스크톱 Chrome 및 iPhone Safari(수동 검증 시)
+
+## Run locally
+
+의존성을 설치한 뒤 개발 서버를 시작합니다.
+
+```bash
+npm install
+npm run dev
+```
+
+터미널에 표시된 로컬 주소를 열어 HOME을 확인합니다. 로컬 브라우저 확인에만 바인딩하려면 `npm run dev -- --host 127.0.0.1`을 사용합니다.
+
+## Build
+
+TypeScript 검사와 정적 프로덕션 번들을 함께 실행합니다.
+
+```bash
+npm run build
+```
+
+빌드 결과물은 `dist/`에 생성되며, 로컬 전용 산출물이므로 저장소에 커밋하지 않습니다. 정적 호스팅 환경에서는 소스에서 빌드하세요.
+
+## Automated tests
+
+렌더러나 브라우저 전역 객체 없이 상태 전환, 포인터 제스처, 움직임·착지, 감속 모션 규칙을 검증합니다.
+
+```bash
+npm test
+```
+
+## Tester instructions
+
+진행자는 컨트롤을 설명하지 않은 채 페이지를 참가자에게 넘기고, 처음 2분 동안 어떤 조작을 스스로 발견하는지 관찰합니다. 안내 문구를 읽어 주거나 조작 방법을 시연하지 말고, 발견 과정과 반복 상호작용을 기록하세요.
+
+## Manual verification
+
+자동 테스트를 통과해도 아래 브라우저·기기 확인은 별도로 진행해야 합니다. 항목을 실제로 검증한 뒤에만 체크하세요.
+
+- [ ] Chrome mouse: Tap, 350ms Long Press, Drag, gentle release, fast release
+- [ ] iPhone Safari touch: Tap, Long Press, Drag, gentle release, fast release
+- [ ] Character remains inside HOME after drag, toss, resize, and orientation change
+- [ ] Canvas does not scroll or select text during character interaction
+- [ ] Refresh starts with one default character and no visible UI
+- [ ] Browser sound policy failure does not block interaction before or after first input
+- [ ] Reduced Motion preserves state changes while reducing visual amplitude
+- [ ] No egg, currency, HP, work/rest item, furniture, tutorial, label, or selector appears

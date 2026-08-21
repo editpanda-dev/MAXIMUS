@@ -119,7 +119,7 @@ export class CharacterController {
 - Consumes: canonical art at `design-assets/reference/jang-han-byeol-base.png`.
 - Produces: `npm run dev`, `npm test`, and `npm run build` commands; an empty, full-viewport canvas host with no product UI.
 
-- [ ] **Step 1: Add npm metadata and commands**
+- [x] **Step 1: Add npm metadata and commands**
 
   Create `package.json` with these scripts and dependency categories. Use currently resolved npm versions when installing; do not hand-pin unverified version numbers.
 
@@ -145,7 +145,7 @@ export class CharacterController {
   }
   ```
 
-- [ ] **Step 2: Add the initial failing smoke test**
+- [x] **Step 2: Add the initial failing smoke test**
 
   Create `src/test/smoke.test.ts`:
 
@@ -160,7 +160,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 3: Install dependencies and run the failing test**
+- [x] **Step 3: Install dependencies and run the failing test**
 
   Run:
 
@@ -171,7 +171,7 @@ export class CharacterController {
 
   Expected: FAIL because `src/view/home-theme.ts` does not exist.
 
-- [ ] **Step 4: Implement the smallest app shell and theme module**
+- [x] **Step 4: Implement the smallest app shell and theme module**
 
   Create `src/view/home-theme.ts`:
 
@@ -232,7 +232,7 @@ export class CharacterController {
 
   Create `src/test/setup.ts` with exactly `export {};` so tests run without browser global setup. Create `README.md` with only `# 장한별 키우기 웹 프로토타입`; Task 6 expands it after the application works.
 
-- [ ] **Step 5: Copy the canonical runtime art without changing the source**
+- [x] **Step 5: Copy the canonical runtime art without changing the source**
 
   Run:
 
@@ -247,7 +247,7 @@ export class CharacterController {
   shasum -a 256 design-assets/reference/jang-han-byeol-base.png public/assets/character/jang-han-byeol-base.png
   ```
 
-- [ ] **Step 6: Run the test and build baseline**
+- [x] **Step 6: Run the test and build baseline**
 
   Run:
 
@@ -258,7 +258,7 @@ export class CharacterController {
 
   Expected: the smoke test passes and Vite emits `dist/` without a TypeScript error.
 
-- [ ] **Step 7: Commit the tooling baseline**
+- [x] **Step 7: Commit the tooling baseline**
 
   ```bash
   git add package.json package-lock.json vite.config.ts tsconfig.json index.html src public/assets/character/jang-han-byeol-base.png README.md
@@ -277,7 +277,7 @@ export class CharacterController {
 - Consumes: `CharacterState`, `LandingKind`, and `CharacterInput` definitions from `src/domain/types.ts`.
 - Produces: `CharacterConfig`, `CharacterStateMachine`, `transitionToReacting(atMs)`, `transitionToHeld(atMs)`, `transitionToLanding(kind, atMs)`, and `tick(atMs)` for `CharacterController`.
 
-- [ ] **Step 1: Write failing transition tests**
+- [x] **Step 1: Write failing transition tests**
 
   Create `src/domain/state-machine.test.ts`:
 
@@ -317,7 +317,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 2: Run the state-machine test to verify it fails**
+- [x] **Step 2: Run the state-machine test to verify it fails**
 
   Run:
 
@@ -327,7 +327,7 @@ export class CharacterController {
 
   Expected: FAIL because `./state-machine` does not exist.
 
-- [ ] **Step 3: Define the stable types and initial constants**
+- [x] **Step 3: Define the stable types and initial constants**
 
   Implement all types in the Shared Interfaces section. In `src/domain/config.ts`, export this exact shape:
 
@@ -363,7 +363,7 @@ export class CharacterController {
   };
   ```
 
-- [ ] **Step 4: Implement the state machine with explicit durations**
+- [x] **Step 4: Implement the state machine with explicit durations**
 
   Implement `CharacterStateMachine` so that:
 
@@ -378,7 +378,7 @@ export class CharacterController {
 
   Use `0.18s` for SAFE, `0.45s` for WOBBLE, and `0.95s + glareDurationSeconds` for ROLL. `tick()` transitions only REACTING and LANDING to IDLE once their deadline is reached. HELD has no deadline.
 
-- [ ] **Step 5: Run the state-machine test to verify it passes**
+- [x] **Step 5: Run the state-machine test to verify it passes**
 
   Run:
 
@@ -388,7 +388,7 @@ export class CharacterController {
 
   Expected: PASS, 3 tests.
 
-- [ ] **Step 6: Commit pure state logic**
+- [x] **Step 6: Commit pure state logic**
 
   ```bash
   git add src/domain/types.ts src/domain/config.ts src/domain/state-machine.ts src/domain/state-machine.test.ts
@@ -405,7 +405,7 @@ export class CharacterController {
 - Consumes: `Bounds`, `LandingKind`, `Point`, `Size`, and `CharacterConfig`.
 - Produces: `clampPoint(point, bounds)`, `calculateVelocity(samples)`, `classifyLanding(speed, characterHeight, config)`, `limitToss(velocity, characterHeight, config)`, and `createBounds(viewport, characterHeight)`.
 
-- [ ] **Step 1: Write failing motion tests**
+- [x] **Step 1: Write failing motion tests**
 
   Create `src/domain/motion.test.ts`:
 
@@ -435,7 +435,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 2: Run the motion test to verify it fails**
+- [x] **Step 2: Run the motion test to verify it fails**
 
   Run:
 
@@ -445,7 +445,7 @@ export class CharacterController {
 
   Expected: FAIL because `./motion` does not exist.
 
-- [ ] **Step 3: Implement vector operations and bounds helpers**
+- [x] **Step 3: Implement vector operations and bounds helpers**
 
   Implement the following exact functions in `src/domain/motion.ts`:
 
@@ -462,7 +462,7 @@ export class CharacterController {
 
   `calculateVelocity` must use the oldest and newest of at most the latest five samples, return `{ x: 0, y: 0 }` for a non-positive time delta, and express result in pixels per second. `createBounds` must use a horizontal margin of `0.35 * characterHeight` and a vertical margin of `0.50 * characterHeight`, so the sprite stays visibly inside HOME at all viewport sizes.
 
-- [ ] **Step 4: Add landing motion test coverage before wiring a view**
+- [x] **Step 4: Add landing motion test coverage before wiring a view**
 
   Append this test:
 
@@ -477,7 +477,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 5: Run motion tests to verify they pass**
+- [x] **Step 5: Run motion tests to verify they pass**
 
   Run:
 
@@ -487,7 +487,7 @@ export class CharacterController {
 
   Expected: PASS, 4 tests.
 
-- [ ] **Step 6: Commit deterministic motion**
+- [x] **Step 6: Commit deterministic motion**
 
   ```bash
   git add src/domain/motion.ts src/domain/motion.test.ts
@@ -504,7 +504,7 @@ export class CharacterController {
 - Consumes: all Task 2 and Task 3 types and helpers.
 - Produces: the `CharacterController` interface declared in Shared Interfaces and a snapshot valid for a PixiJS view on every tick.
 
-- [ ] **Step 1: Write failing controller tests**
+- [x] **Step 1: Write failing controller tests**
 
   Create `src/domain/character-controller.test.ts`:
 
@@ -548,7 +548,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 2: Run the controller tests to verify they fail**
+- [x] **Step 2: Run the controller tests to verify they fail**
 
   Run:
 
@@ -558,7 +558,7 @@ export class CharacterController {
 
   Expected: FAIL because `./character-controller` does not exist.
 
-- [ ] **Step 3: Implement controller input sequencing**
+- [x] **Step 3: Implement controller input sequencing**
 
   Implement `CharacterController` with these rules:
 
@@ -575,7 +575,7 @@ export class CharacterController {
 
   On every `TICK`, advance state machine timers and produce state-specific animation values using time in seconds: `heldPhase`, `rotationRadians`, `verticalOffset`, and `reactionProgress`. Use lower amplitudes in reduced-motion mode, but do not change any state transition or landing classification.
 
-- [ ] **Step 4: Add landing, resize, and reduced-motion tests**
+- [x] **Step 4: Add landing, resize, and reduced-motion tests**
 
   Append these tests:
 
@@ -612,7 +612,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 5: Run controller tests to verify they pass**
+- [x] **Step 5: Run controller tests to verify they pass**
 
   Run:
 
@@ -622,7 +622,7 @@ export class CharacterController {
 
   Expected: PASS, 6 tests.
 
-- [ ] **Step 6: Commit controller behavior**
+- [x] **Step 6: Commit controller behavior**
 
   ```bash
   git add src/domain/character-controller.ts src/domain/character-controller.test.ts
@@ -645,7 +645,7 @@ export class CharacterController {
 - Consumes: `CharacterController`, `CharacterSnapshot`, `homeBackground`, `/assets/character/jang-han-byeol-base.png`.
 - Produces: `createHomeScene(host: HTMLElement): Promise<{ destroy(): void }>` and an interaction surface that does not expose DOM event details to the domain layer.
 
-- [ ] **Step 1: Add a failing app-level smoke test for the view contract**
+- [x] **Step 1: Add a failing app-level smoke test for the view contract**
 
   Create `src/view/home-scene.test.ts`:
 
@@ -660,7 +660,7 @@ export class CharacterController {
   });
   ```
 
-- [ ] **Step 2: Run the view smoke test to verify it fails**
+- [x] **Step 2: Run the view smoke test to verify it fails**
 
   Run:
 
@@ -670,7 +670,7 @@ export class CharacterController {
 
   Expected: FAIL because `./asset-paths` does not exist.
 
-- [ ] **Step 3: Implement the PixiJS character view**
+- [x] **Step 3: Implement the PixiJS character view**
 
   `PixiCharacterView` must create one sprite from `/assets/character/jang-han-byeol-base.png` and one low-opacity ellipse shadow. It must expose:
 
@@ -685,7 +685,7 @@ export class CharacterController {
 
   Set the sprite anchor to `(0.5, 1)` so `snapshot.position` is the foot point. In `update`, apply `position`, `scale`, `rotationRadians`, `verticalOffset`, and a shadow scale/alpha that responds subtly to vertical offset. Never render text, buttons, decorative furniture, or a visible floor line.
 
-- [ ] **Step 4: Implement HOME scene and paper grain**
+- [x] **Step 4: Implement HOME scene and paper grain**
 
   Create `src/view/asset-paths.ts`:
 
@@ -705,7 +705,7 @@ export class CharacterController {
 
   Use `ResizeObserver` to call `controller.setViewport()` and the view resize method. Store and disconnect the observer in `destroy()`.
 
-- [ ] **Step 5: Implement browser input and feedback adapters**
+- [x] **Step 5: Implement browser input and feedback adapters**
 
   `PointerController` must attach `pointerdown`, `pointermove`, `pointerup`, and `pointercancel` to the canvas; call `setPointerCapture()` on a successful pointer down; map `clientX/clientY` through the canvas bounding rectangle to scene coordinates; and call `preventDefault()` only for active character pointer interactions. Listen to `window.blur` and `document.visibilitychange` to send `INTERRUPTED`.
 
@@ -723,7 +723,7 @@ export class CharacterController {
 
   Lazily create an `AudioContext` inside `unlock()`, use short gain-envelope oscillators for each sound, and catch all audio/vibration failures without throwing. Call `unlock()` on the first pointer interaction only. Map state changes from the last snapshot to the three playback methods; request `navigator.vibrate(8)` for HELD and SAFE, and `navigator.vibrate(16)` for WOBBLE/ROLL only when available.
 
-- [ ] **Step 6: Wire the app and reduced-motion presentation**
+- [x] **Step 6: Wire the app and reduced-motion presentation**
 
   Change `src/main.ts` so it gets `#app`, calls `createHomeScene(app)`, and registers `beforeunload` to call `destroy()`. In `src/styles.css`, ensure the canvas fills the visual viewport and add:
 
@@ -735,7 +735,7 @@ export class CharacterController {
 
   Read `window.matchMedia('(prefers-reduced-motion: reduce)').matches` when constructing HOME, and listen for change events to call `controller.setReducedMotion()`.
 
-- [ ] **Step 7: Run unit tests and production build**
+- [x] **Step 7: Run unit tests and production build**
 
   Run:
 
@@ -746,7 +746,7 @@ export class CharacterController {
 
   Expected: all domain and view smoke tests pass; `dist/` exists; no test imports PixiJS except the production-only view modules.
 
-- [ ] **Step 8: Commit the visual prototype**
+- [x] **Step 8: Commit the visual prototype**
 
   ```bash
   git add src/main.ts src/styles.css src/view src/adapters
@@ -763,7 +763,7 @@ export class CharacterController {
 - Consumes: completed npm scripts and application behavior from Tasks 1–5.
 - Produces: tester-facing setup and verification instructions without adding product-facing instructions to the app UI.
 
-- [ ] **Step 1: Write the manual browser verification checklist in README**
+- [x] **Step 1: Write the manual browser verification checklist in README**
 
   Add these exact sections: `Requirements`, `Run locally`, `Build`, `Automated tests`, `Tester instructions`, and `Manual verification`.
 
@@ -789,7 +789,7 @@ export class CharacterController {
   - [ ] No egg, currency, HP, work/rest item, furniture, tutorial, label, or selector appears
   ```
 
-- [ ] **Step 2: Run complete automated verification**
+- [x] **Step 2: Run complete automated verification**
 
   Run:
 
@@ -811,7 +811,7 @@ export class CharacterController {
 
   Verify at the local URL that the empty HOME loads, one character idles, long press enters HELD, gentle release is SAFE, fast release produces WOBBLE or ROLL, and no visible UI appears.
 
-- [ ] **Step 4: Mark completed plan steps and commit documentation**
+- [x] **Step 4: Mark completed plan steps and commit documentation**
 
   Replace only completed Task 1–6 checkboxes with `- [x]` after their associated verification passes. Then run:
 
