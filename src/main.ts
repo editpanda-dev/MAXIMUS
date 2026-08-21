@@ -8,5 +8,5 @@ const host = document.querySelector<HTMLElement>('#app');
 if (host !== null) {
   void createHomeScene(host).then((scene) => {
     window.addEventListener('beforeunload', () => scene.destroy(), { once: true });
-  });
+  }).catch(() => undefined);
 }

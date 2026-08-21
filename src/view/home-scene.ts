@@ -40,81 +40,114 @@ function dispatchFeedback(
 
 export async function createHomeScene(host: HTMLElement): Promise<HomeScene> {
   const app = new Application();
-  await app.init({ background: homeBackground, resizeTo: host, antialias: true });
-  host.appendChild(app.canvas);
+  let attached = false;
+  let destroyed = false;
+  let pointer: PointerController | undefined;
+  let resizeObserver: ResizeObserver | undefined;
+  let reducedMotionQuery: MediaQueryList | undefined;
+  let onReducedMotionChange: ((event: MediaQueryListEvent) => void) | undefined;
+  let onTick: (() => void) | undefined;
+  let character: PixiCharacterView | undefined;
+  let grain: ReturnType<typeof createPaperGrain> | undefined;
 
-  let viewport = viewportOf(host);
-  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const controller = new CharacterController(
-    defaultCharacterConfig,
-    viewport,
-    reducedMotionQuery.matches,
-  );
-  const texture = await Assets.load<Texture>(getCharacterAssetPath());
-  const character = new PixiCharacterView(
-    texture,
-    viewport.height * defaultCharacterConfig.characterHeightRatio,
-  );
-  let grain = createPaperGrain(viewport.width, viewport.height);
-  app.stage.addChild(grain, character.container);
-
-  const feedback = new FeedbackController();
-  const pointer = new PointerController(
-    app.canvas,
-    (input) => controller.receive(input),
-    (point, padding) => character.hitTest(point, padding),
-    () => feedback.unlock(),
-    () => viewport,
-  );
-
-  let lastSnapshot = controller.snapshot();
-  character.update(lastSnapshot, reducedMotionQuery.matches);
-  const onTick = (): void => {
-    const now = performance.now();
-    controller.receive({
-      type: 'TICK',
-      deltaSeconds: app.ticker.deltaMS / 1_000,
-      atMs: now,
-    });
-    const snapshot = controller.snapshot();
-    character.update(snapshot, reducedMotionQuery.matches);
-    dispatchFeedback(lastSnapshot, snapshot, feedback);
-    lastSnapshot = snapshot;
-  };
-  app.ticker.add(onTick);
-
-  const resize = (): void => {
-    viewport = viewportOf(host);
-    app.renderer.resize(viewport.width, viewport.height);
-    controller.setViewport(viewport);
-    character.resize(viewport.height * defaultCharacterConfig.characterHeightRatio);
-    app.stage.removeChild(grain);
-    grain.destroy();
-    grain = createPaperGrain(viewport.width, viewport.height);
-    app.stage.addChildAt(grain, 0);
-    const snapshot = controller.snapshot();
-    character.update(snapshot, reducedMotionQuery.matches);
-    lastSnapshot = snapshot;
-  };
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(host);
-
-  const onReducedMotionChange = (event: MediaQueryListEvent): void => {
-    controller.setReducedMotion(event.matches);
-    const snapshot = controller.snapshot();
-    character.update(snapshot, event.matches);
-    lastSnapshot = snapshot;
-  };
-  reducedMotionQuery.addEventListener('change', onReducedMotionChange);
-
-  return {
-    destroy(): void {
+  const destroy = (): void => {
+    if (destroyed) return;
+    destroyed = true;
+    if (reducedMotionQuery !== undefined && onReducedMotionChange !== undefined) {
       reducedMotionQuery.removeEventListener('change', onReducedMotionChange);
-      resizeObserver.disconnect();
-      pointer.destroy();
-      app.ticker.remove(onTick);
+    }
+    resizeObserver?.disconnect();
+    pointer?.destroy();
+    if (onTick !== undefined) app.ticker.remove(onTick);
+    if (grain !== undefined) {
+      grain.parent?.removeChild(grain);
+      grain.destroy();
+    }
+    if (character !== undefined) {
+      character.container.parent?.removeChild(character.container);
       character.destroy();
+    }
+    if (attached) app.canvas.remove();
+    try {
       app.destroy({ removeView: true }, { children: true });
-    },
+    } catch {
+      // A partially initialized Pixi application may not have a renderer to destroy.
+    }
   };
+
+  try {
+    await app.init({ background: homeBackground, resizeTo: host, antialias: true });
+    host.appendChild(app.canvas);
+    attached = true;
+
+    let viewport = viewportOf(host);
+    reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const controller = new CharacterController(
+      defaultCharacterConfig,
+      viewport,
+      reducedMotionQuery.matches,
+    );
+    const texture = await Assets.load<Texture>(getCharacterAssetPath());
+    character = new PixiCharacterView(
+      texture,
+      viewport.height * defaultCharacterConfig.characterHeightRatio,
+    );
+    grain = createPaperGrain(viewport.width, viewport.height);
+    app.stage.addChild(grain, character.container);
+
+    const feedback = new FeedbackController();
+    pointer = new PointerController(
+      app.canvas,
+      (input) => controller.receive(input),
+      (point, padding) => character?.hitTest(point, padding) ?? false,
+      () => feedback.unlock(),
+      () => viewport,
+    );
+
+    let lastFeedbackSnapshot = controller.snapshot();
+    character.update(lastFeedbackSnapshot, reducedMotionQuery.matches);
+    onTick = (): void => {
+      if (destroyed) return;
+      const now = performance.now();
+      controller.receive({
+        type: 'TICK',
+        deltaSeconds: app.ticker.deltaMS / 1_000,
+        atMs: now,
+      });
+      const snapshot = controller.snapshot();
+      character?.update(snapshot, reducedMotionQuery?.matches ?? false);
+      dispatchFeedback(lastFeedbackSnapshot, snapshot, feedback);
+      lastFeedbackSnapshot = snapshot;
+    };
+    app.ticker.add(onTick);
+
+    const resize = (): void => {
+      if (destroyed) return;
+      viewport = viewportOf(host);
+      app.renderer.resize(viewport.width, viewport.height);
+      controller.setViewport(viewport);
+      character?.resize(viewport.height * defaultCharacterConfig.characterHeightRatio);
+      if (grain !== undefined) {
+        app.stage.removeChild(grain);
+        grain.destroy();
+      }
+      grain = createPaperGrain(viewport.width, viewport.height);
+      app.stage.addChildAt(grain, 0);
+      character?.update(controller.snapshot(), reducedMotionQuery?.matches ?? false);
+    };
+    resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(host);
+
+    onReducedMotionChange = (event: MediaQueryListEvent): void => {
+      if (destroyed) return;
+      controller.setReducedMotion(event.matches);
+      character?.update(controller.snapshot(), event.matches);
+    };
+    reducedMotionQuery.addEventListener('change', onReducedMotionChange);
+
+    return { destroy };
+  } catch (error) {
+    destroy();
+    throw error;
+  }
 }

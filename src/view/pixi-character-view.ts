@@ -1,5 +1,6 @@
-import { Container, Graphics, Sprite, type Texture } from 'pixi.js';
+import { Container, Graphics, Rectangle, Sprite, Texture } from 'pixi.js';
 import type { CharacterSnapshot, Point } from '../domain/types';
+import { characterArtBounds } from './asset-paths';
 import { shadowColor } from './home-theme';
 
 const SHADOW_WIDTH_IN_HEIGHTS = 0.56;
@@ -8,14 +9,26 @@ const SHADOW_HEIGHT_IN_HEIGHTS = 0.075;
 export class PixiCharacterView {
   readonly container = new Container();
   private readonly shadow = new Graphics();
+  private readonly croppedTexture: Texture;
   private readonly sprite: Sprite;
   private characterHeight: number;
   private baseScale = 1;
 
   constructor(texture: Texture, characterHeight: number) {
     this.characterHeight = characterHeight;
-    this.sprite = new Sprite(texture);
+    this.croppedTexture = new Texture({
+      source: texture.source,
+      frame: new Rectangle(
+        characterArtBounds.x,
+        characterArtBounds.y,
+        characterArtBounds.width,
+        characterArtBounds.height,
+      ),
+    });
+    this.sprite = new Sprite(this.croppedTexture);
     this.sprite.anchor.set(0.5, 1);
+    // White pixels in the opaque reference image are neutral over the paper background.
+    this.sprite.blendMode = 'multiply';
     this.container.addChild(this.shadow, this.sprite);
     this.resize(characterHeight);
   }
@@ -62,5 +75,6 @@ export class PixiCharacterView {
 
   destroy(): void {
     this.container.destroy({ children: true });
+    this.croppedTexture.destroy(false);
   }
 }
