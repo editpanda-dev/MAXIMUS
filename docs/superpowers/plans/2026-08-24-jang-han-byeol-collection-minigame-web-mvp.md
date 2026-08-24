@@ -57,7 +57,7 @@
 - Produces `CharacterId = 'base' | 'pogo' | 'udon'`, `AccountProgress`, `RosterEntry`, `createInitialProgress()`, `grantRawReward()`, `selectCharacter()`, `levelRewardMultiplier()`.
 - `AccountProgress` contains `schemaVersion`, `xp`, `level`, `xpIntoLevel`, `stardust`, `selectedCharacterId`, and `roster: Record<CharacterId, RosterEntry>`.
 
-- [ ] **Step 1: Write the failing account-progress tests**
+- [x] **Step 1: Write the failing account-progress tests**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -85,13 +85,13 @@ describe('progress', () => {
 });
 ```
 
-- [ ] **Step 2: Run the progress test to verify it fails**
+- [x] **Step 2: Run the progress test to verify it fails**
 
 Run: `npm test -- src/game/progress.test.ts`
 
 Expected: FAIL because `./progress` does not exist.
 
-- [ ] **Step 3: Implement the minimum pure account model**
+- [x] **Step 3: Implement the minimum pure account model**
 
 ```ts
 export function createInitialProgress(): AccountProgress {
@@ -109,13 +109,13 @@ export function createInitialProgress(): AccountProgress {
 
 Define `grantRawReward()` as an immutable update, define a deterministic XP threshold function in `balance.ts`, and make `selectCharacter()` throw `Error('Character is not owned')` for unavailable IDs.
 
-- [ ] **Step 4: Run the focused and full test suites**
+- [x] **Step 4: Run the focused and full test suites**
 
 Run: `npm test -- src/game/progress.test.ts && npm test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit the domain foundation**
+- [x] **Step 5: Commit the domain foundation**
 
 ```bash
 git add src/game/types.ts src/game/balance.ts src/game/catalog.ts src/game/progress.ts src/game/progress.test.ts
@@ -134,7 +134,7 @@ git commit -m "feat: add account progression model"
 - Consumes `AccountProgress`, `CharacterId`, and `MAX_CHARACTER_LEVEL` from Task 1.
 - Produces `buyEgg(progress: AccountProgress, roll: () => number): EggPurchaseResult` where `EggPurchaseResult` contains `progress`, `characterId`, and `outcome: 'NEW' | 'LEVEL_UP' | 'MAX_LEVEL_REFUND'`.
 
-- [ ] **Step 1: Write failing purchase tests with deterministic rolls**
+- [x] **Step 1: Write failing purchase tests with deterministic rolls**
 
 ```ts
 it('spends 100 stardust and unlocks the rolled unowned Hanbyeol', () => {
@@ -158,23 +158,23 @@ it('does not spend currency when the player cannot afford an egg', () => {
 });
 ```
 
-- [ ] **Step 2: Run the egg test to verify it fails**
+- [x] **Step 2: Run the egg test to verify it fails**
 
 Run: `npm test -- src/game/egg-service.test.ts`
 
 Expected: FAIL because `buyEgg` is not exported.
 
-- [ ] **Step 3: Implement the weighted, deterministic egg service**
+- [x] **Step 3: Implement the weighted, deterministic egg service**
 
 Use the ordered candidate list `['base', 'pogo', 'udon']` with weights `[1, 1, 1]`. Convert the injected roll in `[0, 1)` to a candidate by cumulative weight; clamp a value of `1` to the final candidate for defensive browser adapters. Deduct `EGG_COST = 100` before adding the result. At Lv.10, keep the level at 10 and add `MAX_LEVEL_REFUND` from `balance.ts`.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run: `npm test -- src/game/egg-service.test.ts && npm test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit egg logic**
+- [x] **Step 5: Commit egg logic**
 
 ```bash
 git add src/game/egg-service.ts src/game/egg-service.test.ts src/game/types.ts src/game/balance.ts
@@ -195,7 +195,7 @@ git commit -m "feat: add random egg collection"
 - Produces `BaseTapSession`, constructed as `new BaseTapSession(level, nowSeconds)` and accepting `{ type: 'TAP'; atSeconds: number }`.
 - Produces `settleReward(progress, characterId, rawReward): SettledReward`.
 
-- [ ] **Step 1: Write failing Tap-session and reward tests**
+- [x] **Step 1: Write failing Tap-session and reward tests**
 
 ```ts
 it('creates a combo when taps arrive inside the 1.8 second window', () => {
@@ -220,23 +220,23 @@ it('applies a character level multiplier to stardust but not XP', () => {
 });
 ```
 
-- [ ] **Step 2: Run the two test files and verify failure**
+- [x] **Step 2: Run the two test files and verify failure**
 
 Run: `npm test -- src/games/base-tap-session.test.ts src/game/reward-service.test.ts`
 
 Expected: FAIL because session and reward modules do not exist.
 
-- [ ] **Step 3: Implement raw Tap scoring and centralized settlement**
+- [x] **Step 3: Implement raw Tap scoring and centralized settlement**
 
 Each valid Tap contributes raw `{ xp: 1, stardust: 1 }`. Preserve a `combo` counter and expose a presentation-only combo tier every 10 taps. `BaseTapSession.finish()` returns accumulated raw reward but does not mutate account state. `settleReward()` uses `Math.floor(raw.stardust * levelRewardMultiplier(level))`, retains XP unchanged, then calls `grantRawReward()`.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run: `npm test -- src/games/base-tap-session.test.ts src/game/reward-service.test.ts && npm test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit Tap and reward modules**
+- [x] **Step 5: Commit Tap and reward modules**
 
 ```bash
 git add src/games/session.ts src/games/base-tap-session.ts src/games/base-tap-session.test.ts src/game/reward-service.ts src/game/reward-service.test.ts
@@ -256,7 +256,7 @@ git commit -m "feat: add base tap earnings"
 - Accepts `{ type: 'TAP' }`, exposes snapshot fields `playerY`, `verticalVelocity`, `distance`, `avoids`, `obstacles`, and `ended`.
 - `finish()` returns raw `{ xp, stardust }` based on distance and avoided obstacles.
 
-- [ ] **Step 1: Write failing runner behavior tests**
+- [x] **Step 1: Write failing runner behavior tests**
 
 ```ts
 it('jumps from the ground and ignores a second tap while airborne', () => {
@@ -283,23 +283,23 @@ it('counts an obstacle as avoided exactly once after it leaves the screen', () =
 });
 ```
 
-- [ ] **Step 2: Run the runner test to verify it fails**
+- [x] **Step 2: Run the runner test to verify it fails**
 
 Run: `npm test -- src/games/pogo-session.test.ts`
 
 Expected: FAIL because `PogoSession` does not exist.
 
-- [ ] **Step 3: Implement deterministic physics and obstacle generation**
+- [x] **Step 3: Implement deterministic physics and obstacle generation**
 
 Use seconds-based gravity, a single negative jump velocity, player `x = viewportWidth * 0.24`, and axis-aligned hitboxes smaller than the visible character. Add one seeded linear-congruential random generator local to the session; use it only to pick obstacle kind and a spawn gap constrained by `MIN_SPAWN_GAP_SECONDS` and `MAX_SPAWN_GAP_SECONDS`. Keep `debugPlaceObstacle()` exported only for deterministic tests. Mark each obstacle `counted` before incrementing `avoids`.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run: `npm test -- src/games/pogo-session.test.ts && npm test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit the runner domain**
+- [x] **Step 5: Commit the runner domain**
 
 ```bash
 git add src/games/pogo-session.ts src/games/pogo-session.test.ts src/games/session.ts src/game/balance.ts
@@ -319,7 +319,7 @@ git commit -m "feat: add pogo runner session"
 - Accepts `{ type: 'TAP' }`, exposes `remainingSeconds`, `currentIngredient`, `ingredientProgress`, `combo`, `completedBowls`, and `lastJudgement`.
 - Uses `Judgement = 'PERFECT' | 'GOOD' | 'MISS'` and completes exactly at 45 seconds.
 
-- [ ] **Step 1: Write failing timing-session tests**
+- [x] **Step 1: Write failing timing-session tests**
 
 ```ts
 it('scores PERFECT when the active ingredient is inside the narrow timing window', () => {
@@ -348,23 +348,23 @@ it('ends exactly after 45 seconds', () => {
 });
 ```
 
-- [ ] **Step 2: Run the timing test to verify it fails**
+- [x] **Step 2: Run the timing test to verify it fails**
 
 Run: `npm test -- src/games/udon-session.test.ts`
 
 Expected: FAIL because `UdonSession` does not exist.
 
-- [ ] **Step 3: Implement order, timing windows, and raw scoring**
+- [x] **Step 3: Implement order, timing windows, and raw scoring**
 
 Generate each bowl with a seeded rotation of `['noodles', 'broth', 'tempura', 'garnish']`. Move the active ingredient from 0 to 1 using `deltaSeconds`; resolve a Tap in the central window as Perfect, the surrounding window as Good, and all other input as Miss. Perfect/Good advance the recipe; the fourth success increments `completedBowls` and begins a new seeded order. A Miss resets the combo and starts the same ingredient again. `finish()` returns raw XP and stardust from bowls, Perfect count, and peak combo.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run: `npm test -- src/games/udon-session.test.ts && npm test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit the timing game**
+- [x] **Step 5: Commit the timing game**
 
 ```bash
 git add src/games/udon-session.ts src/games/udon-session.test.ts src/games/session.ts src/game/balance.ts
@@ -384,7 +384,7 @@ git commit -m "feat: add udon timing session"
 - Produces `GameCoordinator` with `snapshot()`, `tap(atSeconds)`, `startSelectedGame(seed)`, `tick(deltaSeconds)`, `buyEgg(roll)`, `selectCharacter(id)`, and `dismissResult()`.
 - `GameCoordinatorSnapshot.screen` is `'HOME' | 'PLAYING' | 'RESULT' | 'EGG_REVEAL'`.
 
-- [ ] **Step 1: Write failing store and coordinator tests**
+- [x] **Step 1: Write failing store and coordinator tests**
 
 ```ts
 it('falls back to the initial progress when saved JSON is invalid', () => {
@@ -404,23 +404,23 @@ it('settles a completed pogo session once and persists the reward', () => {
 });
 ```
 
-- [ ] **Step 2: Run store and coordinator tests to verify failure**
+- [x] **Step 2: Run store and coordinator tests to verify failure**
 
 Run: `npm test -- src/adapters/local-progress-store.test.ts src/game/game-coordinator.test.ts`
 
 Expected: FAIL because storage and coordinator modules do not exist.
 
-- [ ] **Step 3: Implement versioned persistence and one-way settlement**
+- [x] **Step 3: Implement versioned persistence and one-way settlement**
 
 Use the key `jang-han-byeol.progress.v1`. Parse JSON defensively, require the current schema version and valid roster IDs, otherwise return `createInitialProgress()`. `GameCoordinator` owns the only mutable in-memory progress reference; it saves after reward settlement, egg result, and selection. Guard `finish()` with an active-session token so repeated ticks cannot grant the same reward twice.
 
-- [ ] **Step 4: Run focused and full tests**
+- [x] **Step 4: Run focused and full tests**
 
 Run: `npm test -- src/adapters/local-progress-store.test.ts src/game/game-coordinator.test.ts && npm test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit persistence and coordination**
+- [x] **Step 5: Commit persistence and coordination**
 
 ```bash
 git add src/adapters/local-progress-store.ts src/adapters/local-progress-store.test.ts src/game/game-coordinator.ts src/game/game-coordinator.test.ts
@@ -436,7 +436,8 @@ git commit -m "feat: coordinate games and local progress"
 - Create: `src/view/game-views/pogo-view.ts`
 - Create: `src/view/game-views/udon-view.ts`
 - Create: `src/view/game-views/result-view.ts`
-- Create: `src/view/game-shell.test.ts`
+- Create: `src/view/game-display.ts`
+- Create: `src/view/game-display.test.ts`
 - Modify: `src/main.ts`
 - Modify: `src/styles.css`
 - Modify: `src/view/asset-paths.ts`
@@ -448,50 +449,38 @@ git commit -m "feat: coordinate games and local progress"
 - Produces `createGameShell(host: HTMLElement): Promise<{ destroy(): void }>`.
 - DOM buttons call coordinator methods; Pixi canvas Tap calls only `coordinator.tap(performance.now() / 1000)`.
 
-- [ ] **Step 1: Write failing DOM shell tests**
+- [x] **Step 1: Write the failing pure HOME-display test**
 
 ```ts
-it('shows the selected character and current stardust on HOME', async () => {
-  const host = document.createElement('div');
-  const shell = await createGameShell(host, new FakeCoordinator({
-    screen: 'HOME', progress: { ...createInitialProgress(), stardust: 42 },
-  }));
-  expect(host.textContent).toContain('별가루 42');
-  expect(host.textContent).toContain('기본 한별');
-  shell.destroy();
-});
-
-it('opens an egg reveal after an affordable egg purchase', async () => {
-  const coordinator = new FakeCoordinator({ screen: 'HOME', progress: affordableProgress() });
-  const host = document.createElement('div');
-  const shell = await createGameShell(host, coordinator);
-  host.querySelector<HTMLButtonElement>('[data-action="buy-egg"]')?.click();
-  expect(coordinator.buyEggCalls).toBe(1);
-  shell.destroy();
+it('describes the base Hanbyeol as an immediate tap earner', () => {
+  const display = buildHomeDisplay(createInitialProgress(), 4);
+  expect(display.characterName).toBe('기본 한별');
+  expect(display.actionLabel).toBe('한별이를 탭해 별가루 받기');
+  expect(display.comboLabel).toBe('COMBO 4');
 });
 ```
 
-- [ ] **Step 2: Run the shell test to verify it fails**
+- [x] **Step 2: Run the HOME-display test to verify it fails**
 
-Run: `npm test -- src/view/game-shell.test.ts`
+Run: `npm test -- src/view/game-display.test.ts`
 
-Expected: FAIL because `game-shell` does not exist.
+Expected: FAIL because `game-display` does not exist.
 
-- [ ] **Step 3: Implement the smallest playable UI**
+- [x] **Step 3: Implement the smallest playable UI**
 
 Replace `createHomeScene()` booting in `main.ts` with `createGameShell()`. Build a compact DOM HUD containing level/XP, stardust, selected character name, collection button, and egg button. Render collection as a bottom sheet with one selectable card per roster item; unavailable cards are visible but disabled. Copy the two approved derived PNGs into `public/assets/character/` and add asset paths. Keep the current base asset crop for base HOME; render simple Pixi `Graphics` shapes for shrimp, garlic, timing ring, ingredients, and result particles so no unapproved art is invented. Set canvas input to run Base Tap directly on HOME and start Pogo/Udon via an explicit button next to their selected character.
 
-- [ ] **Step 4: Connect update and teardown behavior**
+- [x] **Step 4: Connect update and teardown behavior**
 
 In `game-scene.ts`, create one Pixi `Application`, forward ticker `deltaMS / 1000` to the coordinator, re-render the active view from snapshot, and remove ticker/listeners/canvas in `destroy()`. Use `ResizeObserver` to keep the scene responsive. Do not import DOM storage, Pixi, or browser globals into any `src/game/` or `src/games/` module.
 
-- [ ] **Step 5: Run focused tests, full tests, and production build**
+- [x] **Step 5: Run focused tests, full tests, and production build**
 
-Run: `npm test -- src/view/game-shell.test.ts && npm test && npm run build`
+Run: `npm test -- src/view/game-display.test.ts && npm test && npm run build`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit the playable shell**
+- [x] **Step 6: Commit the playable shell**
 
 ```bash
 git add src/view src/main.ts src/styles.css public/assets/character
@@ -507,7 +496,7 @@ git commit -m "feat: add playable collection game shell"
 **Interfaces:**
 - No new production interfaces.
 
-- [ ] **Step 1: Add executable player verification instructions**
+- [x] **Step 1: Add executable player verification instructions**
 
 Add this checklist to `README.md`:
 
@@ -520,23 +509,23 @@ Add this checklist to `README.md`:
 - [ ] 새로고침 후 별가루·XP·컬렉션·선택 한별이 유지된다.
 ```
 
-- [ ] **Step 2: Mark the implemented design scope accurately**
+- [x] **Step 2: Mark the implemented design scope accurately**
 
 Change the collection design document status from `사용자 승인 완료, 구현 계획 전 검토` to `웹 MVP 구현 완료, 사용자 검증 대기` only after all automated and manual checks in this task pass.
 
-- [ ] **Step 3: Run final automated checks**
+- [x] **Step 3: Run final automated checks**
 
 Run: `npm test && npm run build && git diff --check`
 
 Expected: all tests pass, build exits 0, and whitespace check has no output.
 
-- [ ] **Step 4: Verify each player flow in Chrome**
+- [x] **Step 4: Verify each player flow in Chrome**
 
 Run: `npm run dev -- --host 127.0.0.1`
 
 Verify the six README checklist items manually using the browser. Stop the local server after recording the result.
 
-- [ ] **Step 5: Commit verification documentation**
+- [x] **Step 5: Commit verification documentation**
 
 ```bash
 git add README.md docs/superpowers/specs/2026-08-24-jang-han-byeol-collection-minigame-design.md

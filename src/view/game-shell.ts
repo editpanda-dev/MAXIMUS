@@ -23,9 +23,13 @@ export function createGameShell(host: HTMLElement): GameShell {
   let frame = 0;
   let lastTime = performance.now();
   let destroyed = false;
+  let lastRenderKey = '';
 
   const render = (): void => {
     const snapshot = coordinator.snapshot();
+    const renderKey = JSON.stringify(snapshot);
+    if (renderKey === lastRenderKey) return;
+    lastRenderKey = renderKey;
     const display = buildHomeDisplay(snapshot.progress, snapshot.baseCombo);
     const progressToNext = Math.max(1, 30 + snapshot.progress.level * 20);
     const xpPercent = Math.min(100, snapshot.progress.xpIntoLevel / progressToNext * 100);

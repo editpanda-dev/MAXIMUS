@@ -1,6 +1,6 @@
-# 장한별 키우기 웹 프로토타입
+# 장한별 키우기 웹 MVP
 
-따뜻한 HOME 안에서 장한별 한 명과 상호작용하는 브라우저 프로토타입입니다. 제품 화면에는 조작 안내를 표시하지 않으며, 아래 안내는 테스트 진행자만을 위한 문서입니다.
+기본·스카이콩콩·튀김우동 한별을 수집하고, 각자 다른 Tap 기반 플레이로 별가루를 모아 랜덤 알을 부화시키는 브라우저 MVP입니다.
 
 ## Requirements
 
@@ -37,19 +37,13 @@ npm run build
 npm test
 ```
 
-## Tester instructions
-
-진행자는 컨트롤을 설명하지 않은 채 페이지를 참가자에게 넘기고, 처음 2분 동안 어떤 조작을 스스로 발견하는지 관찰합니다. 안내 문구를 읽어 주거나 조작 방법을 시연하지 말고, 발견 과정과 반복 상호작용을 기록하세요.
-
 ## Manual verification
 
 자동 테스트를 통과해도 아래 브라우저·기기 확인은 별도로 진행해야 합니다. 항목을 실제로 검증한 뒤에만 체크하세요.
 
-- [ ] Chrome mouse: Tap, 350ms Long Press, Drag, gentle release, fast release
-- [ ] iPhone Safari touch: Tap, Long Press, Drag, gentle release, fast release
-- [ ] Character remains inside HOME after drag, toss, resize, and orientation change
-- [ ] Canvas does not scroll or select text during character interaction
-- [ ] Refresh starts with one default character and no visible UI
-- [ ] Browser sound policy failure does not block interaction before or after first input
-- [ ] Reduced Motion preserves state changes while reducing visual amplitude
-- [ ] No egg, currency, HP, work/rest item, furniture, tutorial, label, or selector appears
+- [ ] 기본 한별: 빠르게 탭하면 콤보가 보이고 별가루·XP가 증가한다.
+- [ ] 알: 별가루 100개 이상일 때만 구매되며, 세 한별 중 하나가 나온다.
+- [ ] 중복: 같은 한별이 나오면 레벨이 정확히 1 오른다.
+- [ ] 스카이콩콩: 탭 점프만 가능하고 새우·마늘 충돌 시 한 번만 정산된다.
+- [ ] 튀김우동: 45초 후 한 번만 정산되고 Perfect/Good/Miss가 표시된다.
+- [ ] 새로고침 후 별가루·XP·컬렉션·선택 한별이 유지된다.
