@@ -1,9 +1,20 @@
-:root { background: #f7f3ea; color: #24211f; font-family: system-ui, sans-serif; }
-html, body { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
-body { min-height: 100dvh; display: grid; place-items: center; touch-action: none; user-select: none; -webkit-user-select: none; }
+:root { background: #f7f3ea; color: #29231f; font-family: ui-rounded, "Apple SD Gothic Neo", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; min-height: 100%; margin: 0; }
+body { min-height: 100dvh; display: grid; place-items: center; user-select: none; -webkit-user-select: none; }
 #app { width: min(100vw, 480px); height: 100dvh; overflow: hidden; }
-canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  canvas { image-rendering: auto; }
-}
+button { font: inherit; }
+.game-shell { min-height: 100%; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 36%, #fffdf6 0 18%, #f7f3ea 62%, #e9dfcf); }
+.hud { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: max(18px, env(safe-area-inset-top)) 18px 12px; font-size: 13px; color: #655748; }
+.hud strong { color: #8a6123; background: #fff9eb; padding: 8px 11px; border: 1px solid #e7d5b3; border-radius: 99px; }
+.xp-bar { width: 98px; height: 7px; margin-top: 5px; overflow: hidden; border-radius: 99px; background: #e8ddcd; }.xp-bar i { display:block; height:100%; border-radius:inherit; background:#8fbaa6; }
+.home-scene,.runner-scene,.udon-scene,.modal-scene { min-height: calc(100dvh - 160px); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 14px 22px 20px; }
+.scene-kicker,.sub-copy,.action-copy { margin: 0; color:#786c60; }.scene-kicker { font-size: 14px; font-weight: 700; }.action-copy { font-size: 16px; font-weight: 700; }.sub-copy { margin-top: 8px; font-size: 12px; }
+.character-stage { position: relative; width: min(76vw, 330px); height: min(54vh, 450px); margin: 4px 0 0; border: 0; background: transparent; cursor: pointer; touch-action: manipulation; }.character-stage img,.runner-character,.udon-character,.egg-character { max-width:100%; max-height:100%; object-fit:contain; mix-blend-mode:multiply; }.character-stage img { width:100%; height:100%; filter: drop-shadow(0 13px 7px rgba(74,55,36,.12)); }.tap-spark { position:absolute; left:18%; top:18%; color:#dca64f; font-size:28px; animation: float 1.2s ease-in-out infinite alternate; }.combo { margin: 8px 0 0; color:#c86d48; font-size:13px; font-weight:800; }
+.primary-button,.egg-button { border:0; border-radius:16px; padding:13px 18px; font-weight:800; color:#fffdf8; background:#8f6a4c; box-shadow:0 5px 0 #67472f; cursor:pointer; touch-action:manipulation; }.primary-button { margin-top:22px; }.egg-button:disabled { cursor:not-allowed; background:#c6b8a7; box-shadow:0 5px 0 #a79887; }
+.home-actions { position:absolute; z-index:4; bottom:max(18px, env(safe-area-inset-bottom)); left:16px; right:16px; display:flex; gap:10px; align-items:flex-end; justify-content:space-between; }.home-actions details { flex:1; }.home-actions summary { list-style:none; cursor:pointer; color:#655748; font-size:13px; font-weight:800; }.collection-list { position:absolute; bottom:42px; left:0; display:flex; gap:7px; padding:8px; background:#fffdf7; border:1px solid #e2d6c4; border-radius:16px; box-shadow:0 8px 26px rgba(54,43,31,.15); }.collection-card { width:82px; padding:5px; display:grid; gap:2px; border:1px solid #e3d5c3; border-radius:10px; background:#fff9ee; color:#655748; font-size:10px; }.collection-card img { width:70px; height:62px; object-fit:contain; mix-blend-mode:multiply; }.collection-card.locked { opacity:.46; filter:grayscale(1); }
+.runner-scene { position:relative; overflow:hidden; justify-content:flex-start; padding-top:22px; touch-action:manipulation; }.game-score { z-index:3; margin:0; color:#6e604e; font-weight:800; }.runner-ground { position:absolute; left:0; right:0; bottom:21%; height:7px; background:#b69b78; box-shadow:0 5px 0 #d8c9ae; }.runner-character { position:absolute; z-index:2; width:142px; height:142px; object-fit:contain; transform:translateX(-50%); }.obstacle { position:absolute; z-index:2; font-size:36px; transform:translateX(-50%); filter:drop-shadow(0 4px 2px rgba(0,0,0,.12)); }.game-hint { position:absolute; bottom:7%; color:#8f6a4c; font-weight:800; }
+.udon-scene { justify-content:flex-start; padding-top:20px; touch-action:manipulation; }.udon-character { width:190px; height:235px; margin:5px 0 9px; }.timing-track { position:relative; width:min(80vw,350px); height:56px; border:3px solid #d8c4a7; border-radius:99px; background:#fffaf0; }.timing-perfect { position:absolute; top:16px; left:50%; transform:translateX(-50%); color:#c87549; font-size:12px; font-weight:900; }.ingredient-dot { position:absolute; top:6px; width:43px; height:43px; display:grid; place-items:center; border-radius:50%; transform:translateX(-50%); background:#8fbaa6; color:white; font-size:11px; font-weight:900; }.recipe { margin:18px 0 4px; }.judgement { min-height:22px; margin:0; color:#c87549; font-weight:900; }
+.modal-scene { justify-content:center; background:rgba(247,243,234,.95); }.modal-scene h2 { margin:10px 0; }.reward { margin:12px 0 3px; color:#bd7145; font-size:27px; font-weight:900; }.reward-sub { margin:0; color:#756452; }.egg-character { width:235px; height:270px; }
+@keyframes float { to { transform:translateY(-9px) rotate(12deg); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:.01ms !important; scroll-behavior:auto !important; } }

@@ -28,7 +28,13 @@ export type PogoSnapshot = Readonly<{
 }>;
 
 export type PogoOptions = Readonly<{ seed: number; viewportWidth: number; groundY: number }>;
-type MutableObstacle = PogoObstacle & { counted: boolean };
+type MutableObstacle = {
+  kind: PogoObstacleKind;
+  x: number;
+  width: number;
+  height: number;
+  counted: boolean;
+};
 
 export class PogoSession implements GameSession<PogoInput, PogoSnapshot> {
   private randomState: number;
